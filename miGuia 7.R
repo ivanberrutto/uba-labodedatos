@@ -84,21 +84,25 @@ prueba <- penguins[-indice_entrenamiento, ]
 
 # 1 variable predictora
 modelo1 <- lm(body_mass_g ~ flipper_length_mm, data = entrenamiento)
-
+mean(modelo1$residuals ^ 2)
 # 2 variables predictoras
 modelo2 <- lm(body_mass_g ~ flipper_length_mm + species, data = entrenamiento)
-
+mean(modelo2$residuals ^ 2)
 # 3 variables predictoras
 modelo3 <- lm(body_mass_g ~ flipper_length_mm + species + year, data = entrenamiento)
-
+mean(modelo3$residuals ^ 2)
 # 4 variables predictoras
 modelo4 <- lm(body_mass_g ~ flipper_length_mm + species + year + bill_length_mm, data = entrenamiento)
-
+mean(modelo4$residuals ^ 2)
 # 5 variables predictoras
 modelo5 <- lm(body_mass_g ~ flipper_length_mm + species + year + bill_length_mm + bill_depth_mm, data = entrenamiento)
 
 # 6 variables predictoras
 modelo6 <- lm(body_mass_g ~ flipper_length_mm + species + year + bill_length_mm + bill_depth_mm + sex, data = entrenamiento)
+mean(modelo6$residuals ^ 2)
+
+
+
 
 
 #no entiendo tanto el calculo de ecm y del predict, lo voy a preguntar asi q lo dejo aca
