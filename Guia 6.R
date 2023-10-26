@@ -20,7 +20,7 @@ modeloadelie <- lm(bill_length_mm ~ bill_depth_mm, data=pinguinos[pinguinos$spec
 #modeloadelie <- pinguinos %>% filter(species == "Adelie") %>%  lm(bill_length_mm ~ bill_depth_mm, data = .)
 b0adelie=coef(modeloadelie)[1]
 b1adelie=coef(modeloadelie)[2]
-#Entonces: largo= 23.4 + -0.842 x ancho
+#Entonces: largo= 23.36682 + 0.8424775 x ancho
 #1.4 ¿Qué unidades tienen la ordenada al origen y la pendiente? ¿Cómo se interpretan los valores estimados de la ordenada al origen y la pendiente?
 
 #55.067 seria la ordenada al origen y -0.649 la pendiente 
@@ -69,6 +69,98 @@ ggplot(pinguinos, aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
   geom_smooth(method = "lm", se = FALSE, aes(group = species))
 
 #la verdad se lo pedi a chatgpt porque no queria usar tiempo en esto
+
+
+#1.9 Sólo para los pinguinos de la especie Adelie, definir una nueva variable que sea el ancho del pico centrado respecto al ancho promedio. 
+
+promedio_ancho_adelie <- pinguinos %>%
+  filter(species == "Adelie") %>%
+  summarise(promedio_ancho_adelie = mean(bill_depth_mm)) %>%
+  pull(promedio_ancho_adelie)
+
+pinguinos <- pinguinos %>% 
+  filter(species == "Adelie") %>% 
+  mutate(ancho.cen = bill_depth_mm - promedio_ancho_adelie)
+
+modeloadelie2 <- pinguinos %>% filter(species == "Adelie") %>%  lm(bill_length_mm ~ ancho.cen, data = .)
+b0adelie2=coef(modeloadelie2)[1]
+b1adelie2=coef(modeloadelie2)[2]
+#largo= 38.82397 + 0.8424775 * ancho.cen
+
+#el b1 me quedo igual pero el b0 distinto
+
+#coeficiente de determinacion de adelie2:
+resumen2 <- summary(modeloadelie2)
+resumen2$r.squared
+
+#1.11 Calcular el coeficiente de determinación para este nuevo modelo. ¿Es igual o diferente al calculado en 1.5? Explicar.
+#me quedo el mismo, desconozco la explicacion
+
+
+
+
+#2
+#2.1 Utilizando la librería mtcars incluida en R-base, que contiene datos sobre automóviles, crear un gráfico para visualizar la relación entre la potencia del motor (columna hp) y la eficiencia en millas por galón (columna mpg). ¿Qué patrón se observa?
+  
+#  2.2 Realiza una regresión lineal simple para predecir la eficiencia en millas por galón en función de la potencia del motor, ¿Cuál es el valor del coeficiente de determinación (
+#  )?
+  
+#  2.3 Discutir si parece adecuado un modelo lineal para describir esta relación.
+data(mtcars)
+ggplot(mtcars, aes(x = hp, y = mpg)) +
+  geom_point() +
+  labs(x = "Potencia del Motor (hp)", y = "Millas por Galón (mpg)") +
+  ggtitle("Relación entre Potencia del Motor y Eficiencia en MPG")
+
+modelomt <- lm(mpg ~ hp, data = mtcars)
+# coeficiente de determinacion
+r_cuadrado <- summary(modelomt)$r.squared
+r_cuadrado
+#hay mucha variabilidad, asi que no pareceria bueno
+
+#3.1 Cargar el conjunto de datos iris, incluida en R-base, que contiene información sobre especies de flores y sus características. Intenta realizar una regresión lineal simple para predecir la longitud del sépalo (columna Sepal.Length) en función del ancho del sépalo (columna Sepal.Width). ¿Cuál es el valor del coeficiente de determinación ()?
+data(iris)
+modeloiris <- lm(Sepal.Length ~ Sepal.Width, data = iris)
+#coeficiente de determinacion r2:
+r_cuadrado <- summary(modeloiris)$r.squared
+r_cuadrado
+#osea que no tiene variabilidad  :D
+
+#4.1 Cargar la librería gapminder. Seleccionar datos de un año particular y realizar un gráfico de dispersión que muestre la relación entre el PIB per cápita (columna gdpPercap) y la esperanza de vida (columna lifeExp).
+# Cargar la librería gapminder
+library(gapminder)
+
+datos1997 <- gapminder[gapminder$year == 1997 & gapminder$continent=="Americas" , ]
+ggplot(datos1997, aes(x = gdpPercap, y = lifeExp)) +
+  geom_point() +
+  labs(x = "PIB per Cápita", y = "Esperanza de Vida") +
+  ggtitle("Relación entre PIB per Cápita y Esperanza de Vida (Año 1997)")
+#4.2 Realizar una regresión lineal simple para predecir la esperanza de vida en función del PBI per cápita para 1997 en el continente americano.
+modelogap= lm(lifeExp ~ gdpPercap, data = datos1997)
+#coeficiente de determinacion r2:
+r_cuadrado <- summary(modelogap)$r.squared
+r_cuadrado
+
+#4.3 Discutir si el modelo es adecuado para describir esta relación.
+#no parece tan adecuado
+#4.4 Calcular el error estándar de la estimación (SEE) para evaluar la precisión del modelo de regresión.
+residuos <- residuals(modelogap)
+n <- length(residuos)
+k <- length(coef(modelogap)) - 1
+# Calcular el SEE
+SEE <- sqrt(sum(residuos^2) / (n - k - 1))
+SEE
+
+
+
+#4.5 Repetir 4.2 para un modelo pero utilizando como variable respuesta el logaritmo de la esperanza de vida y como variable explicativa el logaritmo del PBI per capita. Discutir la conveniencia de usar el logaritmo de las variables.
+
+modelogaplog= lm(log(lifeExp) ~ log(gdpPercap), data = datos1997)
+
+
+
+
+
 
 
 
