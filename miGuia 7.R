@@ -77,28 +77,58 @@ ggplot(pinguinos, aes(x = flipper_length_mm, y = body_mass_g, color = species)) 
 
 
 #Ejercicio 4:
-set.seed(123)  # Establecer una semilla para reproducibilidad
-indice_entrenamiento <- sample(1:nrow(penguins), 0.8 * nrow(penguins))
-entrenamiento <- penguins[indice_entrenamiento, ]
-prueba <- penguins[-indice_entrenamiento, ]
+set.seed(123)  
+indice_entrenamiento <- sample(1:nrow(pinguinos), 0.8 * nrow(pinguinos))
+entrenamiento <- pinguinos[indice_entrenamiento, ]
+prueba <- pinguinos[-indice_entrenamiento, ]
+
+#sobreajuste
 
 # 1 variable predictora
 modelo1 <- lm(body_mass_g ~ flipper_length_mm, data = entrenamiento)
+
+#prueba[,"pesopredicho"]=predict(modelo1,newdata=prueba)
+
+#error de prediccion con los datos nuevos
+mean((predict(modelo1,newdata=prueba)-prueba$body_mass_g)^2)
+#error de prediccion con los mismos datos de entrenamiento
 mean(modelo1$residuals ^ 2)
+
 # 2 variables predictoras
 modelo2 <- lm(body_mass_g ~ flipper_length_mm + species, data = entrenamiento)
+#error de prediccion con los datos nuevos
+mean((predict(modelo2,newdata=prueba)-prueba$body_mass_g)^2)
+#error de prediccion con los mismos datos de entrenamiento
 mean(modelo2$residuals ^ 2)
+
 # 3 variables predictoras
 modelo3 <- lm(body_mass_g ~ flipper_length_mm + species + year, data = entrenamiento)
+#error de prediccion con los datos nuevos
+mean((predict(modelo3,newdata=prueba)-prueba$body_mass_g)^2)
+#error de prediccion con los mismos datos de entrenamiento
 mean(modelo3$residuals ^ 2)
+
 # 4 variables predictoras
 modelo4 <- lm(body_mass_g ~ flipper_length_mm + species + year + bill_length_mm, data = entrenamiento)
+#error de prediccion con los datos nuevos
+mean((predict(modelo4,newdata=prueba)-prueba$body_mass_g)^2)
+#error de prediccion con los mismos datos de entrenamiento
 mean(modelo4$residuals ^ 2)
+
 # 5 variables predictoras
 modelo5 <- lm(body_mass_g ~ flipper_length_mm + species + year + bill_length_mm + bill_depth_mm, data = entrenamiento)
+#error de prediccion con los datos nuevos
+mean((predict(modelo5, newdata=prueba)-prueba$body_mass_g)^2)
+#error de prediccion con los mismos datos de entrenamiento
+mean(modelo5$residuals ^ 2)
+
+
 
 # 6 variables predictoras
 modelo6 <- lm(body_mass_g ~ flipper_length_mm + species + year + bill_length_mm + bill_depth_mm + sex, data = entrenamiento)
+#error de prediccion con los datos nuevos
+mean((predict(modelo6,newdata=prueba)-prueba$body_mass_g)^2)
+#error de prediccion con los mismos datos de entrenamiento
 mean(modelo6$residuals ^ 2)
 
 
