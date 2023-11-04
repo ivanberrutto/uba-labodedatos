@@ -17,8 +17,6 @@ b2=coef(modelopinguinos)[3]
 ecm <- mean(modelopinguinos$residuals^2)
 ecm
 
-#preddicion (?)
-predicciones <- predict(modelopinguinos)
 
 
 ggplot(pinguinos, aes(x = flipper_length_mm, y = body_mass_g, color = sex)) +
@@ -94,6 +92,16 @@ mean((predict(modelo1,newdata=prueba)-prueba$body_mass_g)^2)
 #error de prediccion con los mismos datos de entrenamiento
 mean(modelo1$residuals ^ 2)
 
+valores_predichos_pinguinos <- predict(modelo1, entrenamiento)
+
+#calcular r2
+variabilidad_total<- sum((entrenamiento$body_mass_g - mean(entrenamiento$body_mass_g))^2)
+variabilidad_explicada <- sum((mean(entrenamiento$body_mass_g) - valores_predichos_pinguinos)^2)
+R_cuadrado <- variabilidad_explicada/variabilidad_total
+
+resumen <- summary(modelo1)
+resumen$r.squared
+
 # 2 variables predictoras
 modelo2 <- lm(body_mass_g ~ flipper_length_mm + species, data = entrenamiento)
 #error de prediccion con los datos nuevos
@@ -130,7 +138,6 @@ modelo6 <- lm(body_mass_g ~ flipper_length_mm + species + year + bill_length_mm 
 mean((predict(modelo6,newdata=prueba)-prueba$body_mass_g)^2)
 #error de prediccion con los mismos datos de entrenamiento
 mean(modelo6$residuals ^ 2)
-
 
 
 
